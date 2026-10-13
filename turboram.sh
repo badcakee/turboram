@@ -25,6 +25,13 @@
 set -euo pipefail
 export LC_ALL=C
 
+# when piped from curl, save to a real file and re-run from there with the keyboard attached
+if [[ ! -f ${BASH_SOURCE[0]:-} ]]; then
+  tmp=$(mktemp /tmp/turboram.XXXXXX.sh)
+  curl -fsSL https://raw.githubusercontent.com/badcakee/turboram/main/turboram.sh -o "$tmp"
+  exec sudo bash "$tmp" "$@" </dev/tty
+fi
+
 # what the script calls the extra RAM when it talks to you (change it if you want)
 BRAND=TurboRAM
 
